@@ -1,0 +1,12 @@
+.idea
+node_modules/
+.*.sw[nmop]
+npm-debug.log
+docker-compose.override.yml
+.nyc_output
+coverage
+.npm
+.config
+.bash_history
+dist/
+tmp/

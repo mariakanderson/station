@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    // We only support node 18+, but v16 still works. We'll target v16 until it becomes a burden.
+    // For recommended settings for each node version, see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+    "target": "ES2021",
+    "lib": ["ES2021"],
+    /* Modules */
+    "module": "Node16",
+    "rootDir": "./lib/",
+    /* Emit */
+    "declaration": true,
+    "outDir": "./dist/",
+    "importsNotUsedAsValues": "error",
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    /* Type Checking */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    /* Compatibility */
+    "ignoreDeprecations": "5.0",
+    "isolatedModules": true
+  },
+  "include": ["lib"],
+  "exclude": ["jest.config.ts"]
+}
