@@ -1,6 +1,6 @@
 import type { JestConfigWithTsJest } from 'ts-jest'
 
-const config: JestConfigWithTsJest = {
+let config: JestConfigWithTsJest = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: './lib/',
