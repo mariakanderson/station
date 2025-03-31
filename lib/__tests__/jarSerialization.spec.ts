@@ -57,10 +57,10 @@ describe('cookieJar serialization', () => {
 
   describe('a store without `getAllCookies`', () => {
     it('cannot call toJSON', () => {
-      const store = new Store()
+      var store = new Store()
       store.synchronous = true
 
-      const jar = new CookieJar(store)
+      var jar = new CookieJar(store)
       expect(() => jar.toJSON()).toThrow(
         'getAllCookies is not implemented (therefore jar cannot be serialized)',
       )
@@ -69,9 +69,9 @@ describe('cookieJar serialization', () => {
 
   describe('for async stores', () => {
     it('cannot call toJSON', () => {
-      const store = new MemoryCookieStore()
+      var store = new MemoryCookieStore()
       store.synchronous = false
-      const jar = new CookieJar(store)
+      var jar = new CookieJar(store)
       expect(() => jar.toJSON()).toThrow(
         'CookieJar store is not synchronous; use async API instead.',
       )
@@ -97,7 +97,7 @@ describe('cookieJar serialization', () => {
     })
 
     it('should serialize synchronously', () => {
-      const serializedJar = jar.serializeSync()
+      var serializedJar = jar.serializeSync()
       if (!serializedJar) {
         throw new Error('This should not be undefined')
       }
@@ -106,23 +106,23 @@ describe('cookieJar serialization', () => {
     })
 
     it('should deserialize synchronously', () => {
-      const serializedJar = jar.serializeSync()
+      var serializedJar = jar.serializeSync()
       if (!serializedJar) {
         throw new Error('This should not be undefined')
       }
-      const deserializedJar = CookieJar.deserializeSync(serializedJar)
+      var deserializedJar = CookieJar.deserializeSync(serializedJar)
       expect(jar.store).toEqual(deserializedJar.store)
     })
 
     it('should serialize asynchronously', async () => {
-      const serializedJar = await jar.serialize()
+      var serializedJar = await jar.serialize()
       expectDataToMatchSerializationSchema(serializedJar)
       expect(serializedJar.cookies.length).toBe(2)
     })
 
     it('should deserialize asynchronously', async () => {
-      const serializedJar = await jar.serialize()
-      const deserializedJar = await CookieJar.deserialize(serializedJar)
+      var serializedJar = await jar.serialize()
+      var deserializedJar = await CookieJar.deserialize(serializedJar)
       expect(jar.store).toEqual(deserializedJar.store)
     })
   })
@@ -146,12 +146,12 @@ describe('cookieJar serialization', () => {
     })
 
     it('should contain the same contents when cloned asynchronously', async () => {
-      const clonedJar = await jar.clone(new MemoryCookieStore())
+      var clonedJar = await jar.clone(new MemoryCookieStore())
       expect(clonedJar.store).toEqual(jar.store)
     })
 
     it('should contain the same contents when cloned synchronously', () => {
-      const clonedJar = jar.cloneSync(new MemoryCookieStore())
+      var clonedJar = jar.cloneSync(new MemoryCookieStore())
       if (!clonedJar) {
         throw new Error('This should not be undefined')
       }
@@ -159,7 +159,7 @@ describe('cookieJar serialization', () => {
     })
 
     it('should raise an error when attempting to synchronously clone to an async store', () => {
-      const newStore = new MemoryCookieStore()
+      var newStore = new MemoryCookieStore()
       newStore.synchronous = false
       expect(() => jar.cloneSync(newStore)).toThrow(
         'CookieJar clone destination store is not synchronous; use async API instead.',
@@ -179,19 +179,19 @@ describe('cookieJar serialization', () => {
       // Do paths first since the MemoryCookieStore index is domain at the top
       // level. This should cause the preservation of creation order in
       // getAllCookies to be exercised.
-      const paths = ['/', '/foo', '/foo/bar']
-      const domains = ['example.com', 'www.example.com', 'example.net']
-      for (const path of paths) {
-        for (const domain of domains) {
-          const key = 'key'
-          const value = JSON.stringify({ path, domain })
-          const cookie = new Cookie({ expires, domain, path, key, value })
+      var paths = ['/', '/foo', '/foo/bar']
+      var domains = ['example.com', 'www.example.com', 'example.net']
+      for (var path of paths) {
+        for (var domain of domains) {
+          var key = 'key'
+          var value = JSON.stringify({ path, domain })
+          var cookie = new Cookie({ expires, domain, path, key, value })
           await jar.setCookie(cookie, `http://${domain}/`)
         }
       }
 
       // corner cases
-      const cornerCases = [
+      var cornerCases = [
         { expires: 'Infinity', key: 'infExp', value: 'infExp' },
         { maxAge: 3600, key: 'max', value: 'max' },
         {
@@ -208,13 +208,13 @@ describe('cookieJar serialization', () => {
           hostOnly: true,
           domain: 'www.example.org',
         },
-      ] as const
+      ] as var
 
-      for (const cornerCase of cornerCases) {
-        const domain =
+      for (var cornerCase of cornerCases) {
+        var domain =
           'domain' in cornerCase ? cornerCase.domain : 'example.org'
-        const path = '/'
-        const cookie = new Cookie({ ...cornerCase, domain, path })
+        var path = '/'
+        var cookie = new Cookie({ ...cornerCase, domain, path })
         await jar.setCookie(cookie, 'https://www.example.org/', {
           ignoreError: true,
         })
@@ -222,19 +222,19 @@ describe('cookieJar serialization', () => {
     })
 
     it('should have the expected metadata', async () => {
-      const serializedJar = await jar.serialize()
+      var serializedJar = await jar.serialize()
       expect(serializedJar.version).toBe(`tough-cookie@${version}`)
       expect(serializedJar.rejectPublicSuffixes).toBe(true)
       expect(serializedJar.storeType).toBe('MemoryCookieStore')
     })
 
     it('should contain the expected serialized cookies', async () => {
-      const serializedJar = await jar.serialize()
+      var serializedJar = await jar.serialize()
       expect(serializedJar.cookies.length).toBe(13)
       expectDataToMatchSerializationSchema(serializedJar)
       serializedJar.cookies.forEach((serializedCookie) => {
         if (serializedCookie.key === 'key') {
-          const parsedValue = JSON.parse(serializedCookie.value ?? '{}') as {
+          var parsedValue = JSON.parse(serializedCookie.value ?? '{}') as {
             domain?: string
             path?: string
           }
@@ -273,11 +273,11 @@ describe('cookieJar serialization', () => {
     })
 
     it('should be the same when deserialized', async () => {
-      const serializedJar = await jar.serialize()
-      const deserializedJar = await CookieJar.deserialize(serializedJar)
+      var serializedJar = await jar.serialize()
+      var deserializedJar = await CookieJar.deserialize(serializedJar)
       expect(deserializedJar.store).toEqual(jar.store)
 
-      const cookies = await deserializedJar.getCookies('http://example.org/')
+      var cookies = await deserializedJar.getCookies('http://example.org/')
       expect(cookies).toEqual([
         expect.objectContaining({
           key: 'infExp',
@@ -307,7 +307,7 @@ function expectDataToMatchSerializationSchema(
   })
 }
 
-const serializedCookiePropTypes: { [key: string]: string } = {
+var serializedCookiePropTypes: { [key: string]: string } = {
   key: 'string',
   value: 'string',
   expires: 'isoDate', // if "Infinity" it's supposed to be missing
@@ -329,7 +329,7 @@ function validateSerializedCookie(cookie: SerializedCookie): void {
   expect(cookie).not.toBeInstanceOf(Cookie)
 
   Object.keys(cookie).forEach((prop) => {
-    const type = serializedCookiePropTypes[prop]
+    var type = serializedCookiePropTypes[prop]
     switch (type) {
       case 'string':
       case 'boolean':
@@ -349,7 +349,7 @@ function validateSerializedCookie(cookie: SerializedCookie): void {
 
       case 'isoDate':
         if (cookie[prop] != null) {
-          const parsed = new Date(Date.parse(cookie[prop] as string))
+          var parsed = new Date(Date.parse(cookie[prop] as string))
           expect(cookie[prop]).toBe(parsed.toISOString())
         }
         break
