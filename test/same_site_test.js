@@ -30,20 +30,20 @@
  */
 
 "use strict";
-const vows = require("vows");
-const assert = require("assert");
-const tough = require("../dist/cookie");
-const Cookie = tough.Cookie;
-const CookieJar = tough.CookieJar;
+let vows = require("vows");
+let assert = require("assert");
+let tough = require("../dist/cookie");
+let Cookie = tough.Cookie;
+let CookieJar = tough.CookieJar;
 
 vows
   .describe("Same-Site Cookies")
   .addBatch({
     "Testing retrieval from a three-cookie jar": {
       topic: function() {
-        const jar = new CookieJar();
-        const url = (this.url = "http://example.com/index.html");
-        const options = {};
+        let jar = new CookieJar();
+        let url = (this.url = "http://example.com/index.html");
+        let options = {};
 
         [
           "strict=authorized; SameSite=strict",
@@ -103,14 +103,14 @@ vows
   .addBatch({
     "Testing setting cookies": {
       topic: function() {
-        const url = "http://example.com/index.html";
-        const cookies = {
+        let url = "http://example.com/index.html";
+        let cookies = {
           garbage: Cookie.parse("garbageIn=treatedAsNone; SameSite=garbage"),
           strict: Cookie.parse("strict=authorized; SameSite=sTrIcT"),
           lax: Cookie.parse("lax=okay; SameSite=lax"),
           normal: Cookie.parse("normal=whatever") // none
         };
-        const jar = new CookieJar();
+        let jar = new CookieJar();
         this.callSetCookie = function(which, options, cb) {
           return jar.setCookie(cookies[which], url, options, cb);
         };
@@ -236,10 +236,10 @@ vows
   .addBatch({
     "Canonicalized strings": {
       topic: function() {
-        const url = "http://example.com/index.html";
-        const garbage = Cookie.parse("garbage=1");
+        let url = "http://example.com/index.html";
+        let garbage = Cookie.parse("garbage=1");
         garbage.sameSite = "GaRbAGe";
-        const cookies = {
+        let cookies = {
           garbage: garbage,
           strict: Cookie.parse("strict=1; SameSite=STRict"),
           lax: Cookie.parse("lax=1; SameSite=LAx"),
