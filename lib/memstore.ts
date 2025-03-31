@@ -86,11 +86,11 @@ export class MemoryCookieStore extends Store {
     key: Nullable<string>,
     callback?: Callback<Cookie | undefined>,
   ): unknown {
-    const promiseCallback = createPromiseCallback(callback)
+    var promiseCallback = createPromiseCallback(callback)
     if (domain == null || path == null || key == null) {
       return promiseCallback.resolve(undefined)
     }
-    const result = this.idx[domain]?.[path]?.[key]
+    var result = this.idx[domain]?.[path]?.[key]
     return promiseCallback.resolve(result)
   }
 
@@ -156,8 +156,8 @@ export class MemoryCookieStore extends Store {
       allowSpecialUseDomain = true
     }
 
-    const results: Cookie[] = []
-    const promiseCallback = createPromiseCallback<Cookie[]>(callback)
+    var results: Cookie[] = []
+    var promiseCallback = createPromiseCallback<Cookie[]>(callback)
 
     if (!domain) {
       return promiseCallback.resolve([])
@@ -169,10 +169,10 @@ export class MemoryCookieStore extends Store {
     if (!path) {
       // null means "all paths"
       pathMatcher = function matchAll(domainIndex): void {
-        for (const curPath in domainIndex) {
-          const pathIndex = domainIndex[curPath]
-          for (const key in pathIndex) {
-            const value = pathIndex[key]
+        for (var curPath in domainIndex) {
+          var pathIndex = domainIndex[curPath]
+          for (var key in pathIndex) {
+            var value = pathIndex[key]
             if (value) {
               results.push(value)
             }
@@ -183,11 +183,11 @@ export class MemoryCookieStore extends Store {
       pathMatcher = function matchRFC(domainIndex): void {
         //NOTE: we should use path-match algorithm from S5.1.4 here
         //(see : https://github.com/ChromiumWebApps/chromium/blob/b3d3b4da8bb94c1b2e061600df106d590fda3620/net/cookies/canonical_cookie.cc#L299)
-        for (const cookiePath in domainIndex) {
+        for (var cookiePath in domainIndex) {
           if (pathMatch(path, cookiePath)) {
-            const pathIndex = domainIndex[cookiePath]
-            for (const key in pathIndex) {
-              const value = pathIndex[key]
+            var pathIndex = domainIndex[cookiePath]
+            for (var key in pathIndex) {
+              var value = pathIndex[key]
               if (value) {
                 results.push(value)
               }
@@ -197,10 +197,10 @@ export class MemoryCookieStore extends Store {
       }
     }
 
-    const domains = permuteDomain(domain, allowSpecialUseDomain) || [domain]
-    const idx = this.idx
+    var domains = permuteDomain(domain, allowSpecialUseDomain) || [domain]
+    var idx = this.idx
     domains.forEach((curDomain) => {
-      const domainIndex = idx[curDomain]
+      var domainIndex = idx[curDomain]
       if (!domainIndex) {
         return
       }
@@ -241,21 +241,21 @@ export class MemoryCookieStore extends Store {
    * @internal No doc because this is an overload that supports the implementation
    */
   override putCookie(cookie: Cookie, callback?: ErrorCallback): unknown {
-    const promiseCallback = createPromiseCallback<undefined>(callback)
+    var promiseCallback = createPromiseCallback<undefined>(callback)
 
-    const { domain, path, key } = cookie
+    var { domain, path, key } = cookie
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (domain == null || path == null || key == null) {
       return promiseCallback.resolve(undefined)
     }
 
-    const domainEntry =
+    var domainEntry =
       this.idx[domain] ??
       (Object.create(null) as MemoryCookieStoreIndex[string])
 
     this.idx[domain] = domainEntry
 
-    const pathEntry =
+    var pathEntry =
       domainEntry[path] ??
       (Object.create(null) as MemoryCookieStoreIndex[string][string])
 
@@ -362,7 +362,7 @@ export class MemoryCookieStore extends Store {
     key: string,
     callback?: ErrorCallback,
   ): unknown {
-    const promiseCallback = createPromiseCallback<undefined>(callback)
+    var promiseCallback = createPromiseCallback<undefined>(callback)
     delete this.idx[domain]?.[path]?.[key]
     return promiseCallback.resolve(undefined)
   }
@@ -396,9 +396,9 @@ export class MemoryCookieStore extends Store {
     path: string,
     callback?: ErrorCallback,
   ): unknown {
-    const promiseCallback = createPromiseCallback<undefined>(callback)
+    var promiseCallback = createPromiseCallback<undefined>(callback)
 
-    const domainEntry = this.idx[domain]
+    var domainEntry = this.idx[domain]
     if (domainEntry) {
       if (path) {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -426,7 +426,7 @@ export class MemoryCookieStore extends Store {
    * @internal No doc because this is an overload that supports the implementation
    */
   override removeAllCookies(callback?: ErrorCallback): unknown {
-    const promiseCallback = createPromiseCallback<undefined>(callback)
+    var promiseCallback = createPromiseCallback<undefined>(callback)
     this.idx = Object.create(null) as MemoryCookieStoreIndex
     return promiseCallback.resolve(undefined)
   }
@@ -451,20 +451,20 @@ export class MemoryCookieStore extends Store {
    * @internal No doc because this is an overload that supports the implementation
    */
   override getAllCookies(callback?: Callback<Cookie[]>): unknown {
-    const promiseCallback = createPromiseCallback<Cookie[]>(callback)
+    var promiseCallback = createPromiseCallback<Cookie[]>(callback)
 
-    const cookies: Cookie[] = []
-    const idx = this.idx
+    var cookies: Cookie[] = []
+    var idx = this.idx
 
-    const domains = Object.keys(idx)
+    var domains = Object.keys(idx)
     domains.forEach((domain) => {
-      const domainEntry = idx[domain] ?? {}
-      const paths = Object.keys(domainEntry)
+      var domainEntry = idx[domain] ?? {}
+      var paths = Object.keys(domainEntry)
       paths.forEach((path) => {
-        const pathEntry = domainEntry[path] ?? {}
-        const keys = Object.keys(pathEntry)
+        var pathEntry = domainEntry[path] ?? {}
+        var keys = Object.keys(pathEntry)
         keys.forEach((key) => {
-          const keyEntry = pathEntry[key]
+          var keyEntry = pathEntry[key]
           if (keyEntry != null) {
             cookies.push(keyEntry)
           }
