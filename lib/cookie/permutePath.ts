@@ -15,9 +15,9 @@ export function permutePath(path: string): string[] {
   if (path === '/') {
     return ['/']
   }
-  let permutations = [path]
+  const permutations = [path]
   while (path.length > 1) {
-    let lindex = path.lastIndexOf('/')
+    const lindex = path.lastIndexOf('/')
     if (lindex === 0) {
       break
     }
