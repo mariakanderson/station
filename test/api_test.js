@@ -29,14 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 "use strict";
-const vows = require("vows");
-const assert = require("assert");
-const async = require("async");
-const tough = require("../dist/cookie");
-const Cookie = tough.Cookie;
-const CookieJar = tough.CookieJar;
+var vows = require("vows");
+var assert = require("assert");
+var async = require("async");
+var tough = require("../dist/cookie");
+var Cookie = tough.Cookie;
+var CookieJar = tough.CookieJar;
 
-const atNow = Date.now();
+var atNow = Date.now();
 
 function at(offset) {
   return { now: new Date(atNow + offset) };
@@ -106,7 +106,7 @@ vows
         "resolves to an array of cookies"(cookies) {
           assert.ok(Array.isArray(cookies), "not an array");
           assert.ok(cookies.length > 0, "array is empty");
-          for (const cookie of cookies) {
+          for (var cookie of cookies) {
             assert.ok(cookie instanceof Cookie, "not instanceof Cookie");
           }
         }
@@ -130,7 +130,7 @@ vows
         "resolves to a an array of strings"(cookies) {
           assert.ok(Array.isArray(cookies), "not an array");
           assert.ok(cookies.length > 0, "array is empty");
-          for (const cookie of cookies) {
+          for (var cookie of cookies) {
             assert.ok(typeof cookie === "string", "not a string");
           }
         }
@@ -158,8 +158,8 @@ vows
   .addBatch({
     "expiry option": {
       topic: function() {
-        const cb = this.callback;
-        const cj = new CookieJar();
+        var cb = this.callback;
+        var cj = new CookieJar();
         cj.setCookie(
           "near=expiry; Domain=example.com; Path=/; Max-Age=1",
           "http://www.example.com",
@@ -175,7 +175,7 @@ vows
       },
       "then, retrieving": {
         topic: function(t) {
-          const cb = this.callback;
+          var cb = this.callback;
           setTimeout(() => {
             t.cj.getCookies(
               "http://www.example.com",
@@ -197,11 +197,11 @@ vows
   .addBatch({
     "allPaths option": {
       topic: function() {
-        const cj = new CookieJar();
-        const apex = "http://example.com";
-        const www = "http://www.example.com";
-        const other = "http://other.example.com";
-        const tasks = [
+        var cj = new CookieJar();
+        var apex = "http://example.com";
+        var www = "http://www.example.com";
+        var other = "http://other.example.com";
+        var tasks = [
           ["nopath_dom=qq; Path=/; Domain=example.com", apex, {}],
           ["path_dom=qq; Path=/foo; Domain=example.com", apex, {}],
           ["nopath_host=qq; Path=/", www, {}],
@@ -209,7 +209,7 @@ vows
           ["other=qq; Path=/", other, {}],
           ["other2=qq; Path=/foo", `${other}/foo`, {}]
         ].map(args => cb => cj.setCookie(...args, cb));
-        const cb = this.callback;
+        var cb = this.callback;
         async.parallel(tasks, (err, results) => {
           cb(err, { cj: cj, cookies: results });
         });
@@ -224,8 +224,8 @@ vows
       },
       "getting without allPaths": {
         topic: function(t) {
-          const cb = this.callback;
-          const cj = t.cj;
+          var cb = this.callback;
+          var cj = t.cj;
           cj.getCookies("http://www.example.com/", {}, (err, cookies) => {
             cb(err, { cj: cj, cookies: cookies });
           });
@@ -250,8 +250,8 @@ vows
       },
       "getting without allPaths for /foo": {
         topic: function(t) {
-          const cb = this.callback;
-          const cj = t.cj;
+          var cb = this.callback;
+          var cj = t.cj;
           cj.getCookies("http://www.example.com/foo", {}, (err, cookies) => {
             cb(err, { cj: cj, cookies: cookies });
           });
@@ -269,8 +269,8 @@ vows
       },
       "getting with allPaths:true": {
         topic: function(t) {
-          const cb = this.callback;
-          const cj = t.cj;
+          var cb = this.callback;
+          var cj = t.cj;
           cj.getCookies(
             "http://www.example.com/",
             { allPaths: true },
@@ -295,10 +295,10 @@ vows
   .addBatch({
     "Remove cookies": {
       topic: function() {
-        const jar = new CookieJar();
-        const cookie = Cookie.parse("a=b; Domain=example.com; Path=/");
-        const cookie2 = Cookie.parse("a=b; Domain=foo.com; Path=/");
-        const cookie3 = Cookie.parse("foo=bar; Domain=foo.com; Path=/");
+        var jar = new CookieJar();
+        var cookie = Cookie.parse("a=b; Domain=example.com; Path=/");
+        var cookie2 = Cookie.parse("a=b; Domain=foo.com; Path=/");
+        var cookie3 = Cookie.parse("foo=bar; Domain=foo.com; Path=/");
         async.parallel(
           [
             [cookie, "http://example.com/index.html"],
@@ -348,7 +348,7 @@ vows
     "Synchronous CookieJar": {
       setCookieSync: {
         topic: function() {
-          const jar = new CookieJar();
+          var jar = new CookieJar();
           let cookie = Cookie.parse("a=b; Domain=example.com; Path=/");
           cookie = jar.setCookieSync(cookie, "http://example.com/index.html");
           return cookie;
@@ -360,8 +360,8 @@ vows
 
       getCookiesSync: {
         topic: function() {
-          const jar = new CookieJar();
-          const url = "http://example.com/index.html";
+          var jar = new CookieJar();
+          var url = "http://example.com/index.html";
           jar.setCookieSync("a=b; Domain=example.com; Path=/", url);
           jar.setCookieSync("c=d; Domain=example.com; Path=/", url);
           return jar.getCookiesSync(url);
@@ -378,8 +378,8 @@ vows
 
       getCookieStringSync: {
         topic: function() {
-          const jar = new CookieJar();
-          const url = "http://example.com/index.html";
+          var jar = new CookieJar();
+          var url = "http://example.com/index.html";
           jar.setCookieSync("a=b; Domain=example.com; Path=/", url);
           jar.setCookieSync("c=d; Domain=example.com; Path=/", url);
           return jar.getCookieStringSync(url);
@@ -392,8 +392,8 @@ vows
 
       getSetCookieStringsSync: {
         topic: function() {
-          const jar = new CookieJar();
-          const url = "http://example.com/index.html";
+          var jar = new CookieJar();
+          var url = "http://example.com/index.html";
           jar.setCookieSync("a=b; Domain=example.com; Path=/", url);
           jar.setCookieSync("c=d; Domain=example.com; Path=/", url);
           return jar.getSetCookieStringsSync(url);
@@ -410,10 +410,10 @@ vows
 
       removeAllCookiesSync: {
         topic: function() {
-          const jar = new CookieJar();
-          const cookie1 = Cookie.parse("a=b; Domain=example.com; Path=/");
-          const cookie2 = Cookie.parse("a=b; Domain=foo.com; Path=/");
-          const cookie3 = Cookie.parse("foo=bar; Domain=foo.com; Path=/");
+          var jar = new CookieJar();
+          var cookie1 = Cookie.parse("a=b; Domain=example.com; Path=/");
+          var cookie2 = Cookie.parse("a=b; Domain=foo.com; Path=/");
+          var cookie3 = Cookie.parse("foo=bar; Domain=foo.com; Path=/");
           jar.setCookieSync(cookie1, "http://example.com/index.html");
           jar.setCookieSync(cookie2, "http://foo.com/index.html");
           jar.setCookieSync(cookie3, "http://foo.com/index.html");
@@ -437,7 +437,7 @@ vows
       },
       setCookieSync: {
         topic: function(store) {
-          const jar = new CookieJar(store);
+          var jar = new CookieJar(store);
           try {
             jar.setCookieSync("a=b", "http://example.com/index.html");
             return false;
@@ -455,7 +455,7 @@ vows
       },
       getCookiesSync: {
         topic: function(store) {
-          const jar = new CookieJar(store);
+          var jar = new CookieJar(store);
           try {
             jar.getCookiesSync("http://example.com/index.html");
             return false;
@@ -473,7 +473,7 @@ vows
       },
       getCookieStringSync: {
         topic: function(store) {
-          const jar = new CookieJar(store);
+          var jar = new CookieJar(store);
           try {
             jar.getCookieStringSync("http://example.com/index.html");
             return false;
@@ -491,7 +491,7 @@ vows
       },
       getSetCookieStringsSync: {
         topic: function(store) {
-          const jar = new CookieJar(store);
+          var jar = new CookieJar(store);
           try {
             jar.getSetCookieStringsSync("http://example.com/index.html");
             return false;
@@ -509,7 +509,7 @@ vows
       },
       removeAllCookies: {
         topic: function(store) {
-          const jar = new CookieJar(store);
+          var jar = new CookieJar(store);
           try {
             jar.removeAllCookiesSync();
             return false;
@@ -531,8 +531,8 @@ vows
     "loose option": {
       "cookie jar with loose": {
         topic: function() {
-          const jar = new CookieJar();
-          const url = "http://example.com/index.html";
+          var jar = new CookieJar();
+          var url = "http://example.com/index.html";
           return jar.setCookieSync("=b", url, { loose: true });
         },
         succeeds: function(err, c) {
@@ -543,8 +543,8 @@ vows
       },
       "cookie jar without loose": {
         topic: function() {
-          const jar = new CookieJar();
-          const url = "http://example.com/index.html";
+          var jar = new CookieJar();
+          var url = "http://example.com/index.html";
           return jar.setCookieSync("=b", url);
         },
         fails: function(err, c) {
@@ -554,7 +554,7 @@ vows
       },
       "map doesn't default to loose": {
         topic: function() {
-          const some = [
+          var some = [
             "=a;domain=example.com", // index 0, falsey
             "=b;domain=example.com", // index 1, falsey
             "c=d;domain=example.com" // index 2, truthy
@@ -584,7 +584,7 @@ vows
   .export(module);
 
 function allowSpecialUseOptionVows() {
-  const specialUseDomains = [
+  var specialUseDomains = [
     "local",
     "example",
     "invalid",
@@ -592,7 +592,7 @@ function allowSpecialUseOptionVows() {
     "test"
   ];
 
-  const specialTreatmentDomains = ["localhost", "invalid"];
+  var specialTreatmentDomains = ["localhost", "invalid"];
 
   return specialUseDomains.reduce((vows, specialUseDomain) => {
     if (specialTreatmentDomains.includes(specialUseDomain)) {
@@ -600,8 +600,8 @@ function allowSpecialUseOptionVows() {
         `cookie jar with allowSpecialUseDomain set to the default value and domain is "${specialUseDomain}"`
       ] = {
         topic: function() {
-          const cb = this.callback;
-          const cj = new CookieJar();
+          var cb = this.callback;
+          var cj = new CookieJar();
           cj.setCookie(
             `settingThisShouldPass=true; Domain=${specialUseDomain}; Path=/;`,
             `http://${specialUseDomain}`,
@@ -617,7 +617,7 @@ function allowSpecialUseOptionVows() {
         },
         "then, retrieving": {
           topic: function(t) {
-            const cb = this.callback;
+            var cb = this.callback;
             setTimeout(() => {
               t.cj.getCookies(
                 `http://${specialUseDomain}`,
@@ -641,8 +641,8 @@ function allowSpecialUseOptionVows() {
       `cookie jar with allowSpecialUseDomain set to the default value and domain is "dev.${specialUseDomain}"`
     ] = {
       topic: function() {
-        const cb = this.callback;
-        const cj = new CookieJar();
+        var cb = this.callback;
+        var cj = new CookieJar();
         cj.setCookie(
           `settingThisShouldPass=true; Domain=dev.${specialUseDomain}; Path=/;`,
           `http://dev.${specialUseDomain}`,
@@ -658,7 +658,7 @@ function allowSpecialUseOptionVows() {
       },
       "then, retrieving": {
         topic: function(t) {
-          const cb = this.callback;
+          var cb = this.callback;
           setTimeout(() => {
             t.cj.getCookies(
               `http://dev.${specialUseDomain}`,
@@ -681,8 +681,8 @@ function allowSpecialUseOptionVows() {
       `cookie jar with allowSpecialUseDomain enabled and domain is "dev.${specialUseDomain}"`
     ] = {
       topic: function() {
-        const cb = this.callback;
-        const cj = new CookieJar(new tough.MemoryCookieStore(), {
+        var cb = this.callback;
+        var cj = new CookieJar(new tough.MemoryCookieStore(), {
           rejectPublicSuffixes: true,
           allowSpecialUseDomain: true
         });
@@ -701,7 +701,7 @@ function allowSpecialUseOptionVows() {
       },
       "then, retrieving": {
         topic: function(t) {
-          const cb = this.callback;
+          var cb = this.callback;
           setTimeout(() => {
             t.cj.getCookies(
               `http://dev.${specialUseDomain}`,
@@ -724,7 +724,7 @@ function allowSpecialUseOptionVows() {
       `cookie jar with allowSpecialUseDomain disabled and domain is "dev.${specialUseDomain}"`
     ] = {
       topic: function() {
-        const cj = new CookieJar(new tough.MemoryCookieStore(), {
+        var cj = new CookieJar(new tough.MemoryCookieStore(), {
           allowSpecialUseDomain: false,
           rejectPublicSuffixes: true
         });
