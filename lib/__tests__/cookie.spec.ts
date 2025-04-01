@@ -33,7 +33,7 @@ import { Cookie } from '../cookie/cookie'
 
 // ported from test/api_test.js (cookie tests)
 describe('Cookie', () => {
-  let cookie: Cookie
+  const cookie: Cookie
 
   describe('constructor', () => {
     beforeEach(() => {
