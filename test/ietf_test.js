@@ -30,13 +30,13 @@
  */
 
 "use strict";
-const vows = require("vows");
-const assert = require("assert");
-const fs = require("fs");
-const path = require("path");
-const url = require("url");
-const tough = require("../dist/cookie");
-const CookieJar = tough.CookieJar;
+var vows = require("vows");
+var assert = require("assert");
+var fs = require("fs");
+var path = require("path");
+var url = require("url");
+var tough = require("../dist/cookie");
+var CookieJar = tough.CookieJar;
 
 function readJson(filePath) {
   filePath = path.join(__dirname, filePath);
@@ -44,15 +44,15 @@ function readJson(filePath) {
 }
 
 function setGetCookieVows() {
-  const theVows = {};
-  const data = readJson("./ietf_data/parser.json");
+  var theVows = {};
+  var data = readJson("./ietf_data/parser.json");
 
   data.forEach(testCase => {
     theVows[testCase.test] = function() {
-      const jar = new CookieJar();
-      const expected = testCase["sent"];
-      const sentFrom = `http://home.example.org/cookie-parser?${testCase.test}`;
-      const sentTo = testCase["sent-to"]
+      var jar = new CookieJar();
+      var expected = testCase["sent"];
+      var sentFrom = `http://home.example.org/cookie-parser?${testCase.test}`;
+      var sentTo = testCase["sent-to"]
         ? url.resolve("http://home.example.org", testCase["sent-to"])
         : `http://home.example.org/cookie-parser-result?${testCase.test}`;
 
@@ -60,12 +60,12 @@ function setGetCookieVows() {
         jar.setCookieSync(cookieStr, sentFrom, { ignoreError: true });
       });
 
-      const actual = jar.getCookiesSync(sentTo, { sort: true });
+      var actual = jar.getCookiesSync(sentTo, { sort: true });
 
       assert.strictEqual(actual.length, expected.length);
 
       actual.forEach((actualCookie, idx) => {
-        const expectedCookie = expected[idx];
+        var expectedCookie = expected[idx];
         assert.strictEqual(actualCookie.key, expectedCookie.name);
         assert.strictEqual(actualCookie.value, expectedCookie.value);
       });
@@ -76,14 +76,14 @@ function setGetCookieVows() {
 }
 
 function dateVows() {
-  const theVows = {};
+  var theVows = {};
 
   [
     "./ietf_data/dates/bsd-examples.json",
     "./ietf_data/dates/examples.json"
   ].forEach(filePath => {
-    const data = readJson(filePath);
-    const fileName = path.basename(filePath);
+    var data = readJson(filePath);
+    var fileName = path.basename(filePath);
 
     data.forEach(testCase => {
       theVows[`${fileName} : ${testCase.test}`] = function() {
